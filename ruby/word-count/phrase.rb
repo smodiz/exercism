@@ -16,9 +16,7 @@ class Phrase
 
  
   def count(words)
-    word_counts = Hash.new(0)
-    words.each { |word| word_counts[word.downcase] += 1 }
-    word_counts
+    words.each_with_object(Hash.new(0)) { |word, h| h[word.downcase] += 1 }
   end
 
 end
