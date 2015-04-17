@@ -7,9 +7,9 @@ end
 class RomanNumeral
   # Numbr represents an integer number, the roman numeral it
   # maps to, as well as whether that roman can be used as
-  # a prefix. Prefixes are numbers that can prefix a
-  # higher number and the integer version always start with 1,
-  # e.g. I as in IV, or X as in XC
+  # a prefix. Prefixes are numbers that can be used before a
+  # higher number to indicate subtraction. Only integers that
+  # start with a 1, are prefixable, e.g. I as in IV, or X as in XC
   Numbr = Struct.new(:int, :roman, :prefixable?)
 
   NUMBERS = {
@@ -28,14 +28,13 @@ class RomanNumeral
     # need to know the Numbrs that   
     # are adjacent to the input (above and below),
     # as well as the nearest potential prefix
-    set_next_higher_entry
-    set_next_lower_entry
-    set_next_lower_prefix
+    set_higher_numbr
+    set_lower_numbr
+    set_lower_prefix
   end
 
   def value
     return NUMBERS[input].roman if exact_match?
-
     if use_prefix?
       prefix.roman + higher.roman + remainder.to_roman
     else
@@ -59,15 +58,15 @@ class RomanNumeral
     end
   end
 
-  def set_next_higher_entry
+  def set_higher_numbr
     _, @higher = NUMBERS.find { |k,v| k >= input }
   end
 
-  def set_next_lower_entry
+  def set_lower_numbr
     _, @lower = reversed_nums.find { |k,v| k <= input } 
   end
 
-  def set_next_lower_prefix
+  def set_lower_prefix
     _, @prefix = reversed_nums.find { |k,v| k <= input &&  v.prefixable? }
   end
 
